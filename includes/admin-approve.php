@@ -46,7 +46,7 @@ class pw_new_user_approve_admin_approve {
 
         if ( $show_admin_page ) {
             $cap = apply_filters( 'new_user_approve_minimum_cap', 'edit_users' );
-            add_users_page( __( 'Approve New Users', 'new-user-approve' ), __( 'Approve New Users', 'new-user-approve' ), $cap, $this->_admin_page, array( $this, 'approve_admin' ) );
+            add_users_page( esc_html__( 'Approve New Users', 'new-user-approve' ), esc_html__( 'Approve New Users', 'new-user-approve' ), $cap, $this->_admin_page, array( $this, 'approve_admin' ) );
         }
     }
 
@@ -61,12 +61,12 @@ class pw_new_user_approve_admin_approve {
         $active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'pending_users';
         ?>
         <div class="wrap">
-            <h2><?php _e( 'User Registration Approval', 'new-user-approve' ); ?></h2>
+            <h2><?php esc_html_e( 'User Registration Approval', 'new-user-approve' ); ?></h2>
 
             <h3 class="nav-tab-wrapper">
-                <a href="<?php echo esc_url( admin_url( 'users.php?page=new-user-approve-admin&tab=pending_users' ) ); ?>" class="nav-tab<?php echo $active_tab == 'pending_users' ? ' nav-tab-active' : ''; ?>"><span><?php _e( 'Users Pending Approval', 'new-user-approve' ); ?></span></a>
-                <a href="<?php echo esc_url( admin_url( 'users.php?page=new-user-approve-admin&tab=approved_users' ) ); ?>" class="nav-tab<?php echo $active_tab == 'approved_users' ? ' nav-tab-active' : ''; ?>"><span><?php _e( 'Approved Users', 'new-user-approve' ); ?></span></a>
-                <a href="<?php echo esc_url( admin_url( 'users.php?page=new-user-approve-admin&tab=denied_users' ) ); ?>" class="nav-tab<?php echo $active_tab == 'denied_users' ? ' nav-tab-active' : ''; ?>"><span><?php _e( 'Denied Users', 'new-user-approve' ); ?></span></a>
+                <a href="<?php echo esc_url( admin_url( 'users.php?page=new-user-approve-admin&tab=pending_users' ) ); ?>" class="nav-tab<?php echo esc_html( $active_tab == 'pending_users' ? ' nav-tab-active' : '' ); ?>"><span><?php esc_html_e( 'Users Pending Approval', 'new-user-approve' ); ?></span></a>
+                <a href="<?php echo esc_url( admin_url( 'users.php?page=new-user-approve-admin&tab=approved_users' ) ); ?>" class="nav-tab<?php echo esc_html( $active_tab == 'approved_users' ? ' nav-tab-active' : '' ); ?>"><span><?php esc_html_e( 'Approved Users', 'new-user-approve' ); ?></span></a>
+                <a href="<?php echo esc_url( admin_url( 'users.php?page=new-user-approve-admin&tab=denied_users' ) ); ?>" class="nav-tab<?php echo esc_html( $active_tab == 'denied_users' ? ' nav-tab-active' : '' ); ?>"><span><?php esc_html_e( 'Denied Users', 'new-user-approve' ); ?></span></a>
             </h3>
 
             <?php if ( $active_tab == 'pending_users' ) : ?>
@@ -105,13 +105,13 @@ class pw_new_user_approve_admin_approve {
             <table class="widefat">
                 <thead>
                 <tr class="thead">
-                    <th><?php _e( 'Username', 'new-user-approve' ); ?></th>
-                    <th><?php _e( 'Name', 'new-user-approve' ); ?></th>
-                    <th><?php _e( 'E-mail', 'new-user-approve' ); ?></th>
+                    <th><?php esc_html_e( 'Username', 'new-user-approve' ); ?></th>
+                    <th><?php esc_html_e( 'Name', 'new-user-approve' ); ?></th>
+                    <th><?php esc_html_e( 'E-mail', 'new-user-approve' ); ?></th>
                     <?php if ( 'pending' == $status ) { ?>
-                        <th colspan="2" style="text-align: center"><?php _e( 'Actions', 'new-user-approve' ); ?></th>
+                        <th colspan="2" style="text-align: center"><?php esc_html_e( 'Actions', 'new-user-approve' ); ?></th>
                     <?php } else { ?>
-                        <th style="text-align: center"><?php _e( 'Actions', 'new-user-approve' ); ?></th>
+                        <th style="text-align: center"><?php esc_html_e( 'Actions', 'new-user-approve' ); ?></th>
                     <?php } ?>
                 </tr>
                 </thead>
@@ -147,15 +147,15 @@ class pw_new_user_approve_admin_approve {
                         $edit = '<strong>' . esc_html( $user->user_login ) . '</strong>';
                     }
 
-                    ?><tr <?php echo $class; ?>>
-                    <td><?php echo $avatar . ' ' . $edit; ?></td>
-                    <td><?php echo get_user_meta( $user->ID, 'first_name', true ) . ' ' . get_user_meta( $user->ID, 'last_name', true ); ?></td>
-                    <td><a href="mailto:<?php echo $user->user_email; ?>" title="<?php _e('email:', 'new-user-approve' ) ?> <?php echo $user->user_email; ?>"><?php echo $user->user_email; ?></a></td>
+                    ?><tr <?php echo esc_attr( $class ); ?>>
+                    <td><?php echo esc_html( $avatar . ' ' . $edit ); ?></td>
+                    <td><?php echo esc_html( get_user_meta( $user->ID, 'first_name', true ) . ' ' . get_user_meta( $user->ID, 'last_name', true ) ); ?></td>
+                    <td><a href="mailto:<?php echo sanitize_email( $user->user_email ); ?>" title="<?php esc_attr_e('email:', 'new-user-approve' ) ?> <?php echo sanitize_email( $user->user_email ); ?>"><?php echo sanitize_email( $user->user_email ); ?></a></td>
                     <?php if ( $approve && $user->ID != get_current_user_id() ) { ?>
-                        <td align="center"><a href="<?php echo esc_url( $approve_link ); ?>" title="<?php _e( 'Approve', 'new-user-approve' ); ?> <?php echo $user->user_login; ?>"><?php _e( 'Approve', 'new-user-approve' ); ?></a></td>
+                        <td align="center"><a href="<?php echo esc_url( $approve_link ); ?>" title="<?php esc_attr_e( 'Approve', 'new-user-approve' ); ?> <?php echo esc_attr( $user->user_login ); ?>"><?php esc_html_e( 'Approve', 'new-user-approve' ); ?></a></td>
                     <?php } ?>
                     <?php if ( $deny && $user->ID != get_current_user_id() ) { ?>
-                        <td align="center"><a href="<?php echo esc_url( $deny_link ); ?>" title="<?php _e( 'Deny', 'new-user-approve' ); ?> <?php echo $user->user_login; ?>"><?php _e( 'Deny', 'new-user-approve' ); ?></a></td>
+                        <td align="center"><a href="<?php echo esc_url( $deny_link ); ?>" title="<?php esc_attr_e( 'Deny', 'new-user-approve' ); ?> <?php echo esc_attr( $user->user_login ); ?>"><?php esc_html_e( 'Deny', 'new-user-approve' ); ?></a></td>
                     <?php } ?>
                     <?php if ( $user->ID == get_current_user_id() ) : ?>
                         <td colspan="2">&nbsp;</td>
@@ -170,14 +170,14 @@ class pw_new_user_approve_admin_approve {
         } else {
             $status_i18n = $status;
             if ( $status == 'approved' ) {
-                $status_i18n = __( 'approved', 'new-user-approve' );
+                $status_i18n = esc_html__( 'approved', 'new-user-approve' );
             } else if ( $status == 'denied' ) {
-                $status_i18n = __( 'denied', 'new-user-approve' );
+                $status_i18n = esc_html__( 'denied', 'new-user-approve' );
             } else if ( $status == 'pending' ) {
-                $status_i18n = __( 'pending', 'new-user-approve' );
+                $status_i18n = esc_html__( 'pending', 'new-user-approve' );
             }
 
-            echo '<p>'.sprintf( __( 'There are no users with a status of %s', 'new-user-approve' ), $status_i18n ) . '</p>';
+            echo '<p>'.sprintf( esc_html__( 'There are no users with a status of %s', 'new-user-approve' ), $status_i18n ) . '</p>';
         }
     }
 
@@ -213,7 +213,7 @@ class pw_new_user_approve_admin_approve {
             // Check that the user hasn't already clicked to ignore the message
             if ( ! get_user_meta( $user_id, 'pw_new_user_approve_ignore_notice' ) ) {
                 echo '<div class="updated"><p>';
-                printf( __( 'You can now update user status on the <a href="%1$s">users admin page</a>. | <a href="%2$s">Hide Notice</a>', 'new-user-approve' ), admin_url( 'users.php' ), add_query_arg( array( 'new-user-approve-ignore-notice' => 1 ) ) );
+                printf( esc_html__( 'You can now update user status on the <a href="%1$s">users admin page</a>. | <a href="%2$s">Hide Notice</a>', 'new-user-approve' ), admin_url( 'users.php' ), add_query_arg( array( 'new-user-approve-ignore-notice' => 1 ) ) );
                 echo "</p></div>";
             }
         }

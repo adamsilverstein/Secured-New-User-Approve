@@ -68,22 +68,22 @@ class pw_new_user_approve {
 
 	/**
 	 * Require a minimum version of WordPress on activation
-	 * 
+	 *
 	 * @uses register_activation_hook
 	 */
 	public function activation() {
 		global $wp_version;
 
 		$min_wp_version = '3.5.1';
-		$exit_msg = sprintf( __( 'New User Approve requires WordPress %s or newer.', 'new-user-approve' ), $min_wp_version );
+		$exit_msg = sprintf( esc_html__( 'New User Approve requires WordPress %s or newer.', 'new-user-approve' ), $min_wp_version );
 		if ( version_compare( $wp_version, $min_wp_version, '<' ) ) {
 			exit( $exit_msg );
 		}
-		
+
 		// since the right version of WordPress is being used, run a hook
 		do_action( 'new_user_approve_activate' );
 	}
-	
+
 	/**
 	 * @uses register_deactivation_hook
 	 */
@@ -196,13 +196,13 @@ class pw_new_user_approve {
         $message = false;
         switch ( $status ) {
             case 'pending':
-                $pending_message = __( '<strong>ERROR</strong>: Your account is still pending approval.', 'new-user-approve' );
+                $pending_message = esc_html__( '<strong>ERROR</strong>: Your account is still pending approval.', 'new-user-approve' );
                 $pending_message = apply_filters( 'new_user_approve_pending_error', $pending_message );
 
                 $message = new WP_Error( 'pending_approval', $pending_message );
                 break;
             case 'denied':
-                $denied_message = __( '<strong>ERROR</strong>: Your account has been denied access to this site.', 'new-user-approve' );
+                $denied_message = esc_html__( '<strong>ERROR</strong>: Your account has been denied access to this site.', 'new-user-approve' );
                 $denied_message = apply_filters( 'new_user_approve_denied_error', $denied_message );
 
                 $message = new WP_Error( 'denied_access', $denied_message );
@@ -289,9 +289,9 @@ class pw_new_user_approve {
         $user_status = $this->get_user_statuses();
         ?>
         <div>
-            <p><span style="font-weight:bold;"><a href="<?php echo apply_filters( 'new_user_approve_dashboard_link', 'users.php' ); ?>"><?php _e( 'Users', 'new-user-approve' ); ?></a></span>:
+            <p><span style="font-weight:bold;"><a href="<?php echo esc_url( apply_filters( 'new_user_approve_dashboard_link', 'users.php' ) ); ?>"><?php esc_html_e( 'Users', 'new-user-approve' ); ?></a></span>:
             <?php foreach ( $user_status as $status => $users ) :
-                print count( $users ) . " " . __( $status, 'new-user-approve' ) . "&nbsp;&nbsp;&nbsp;";
+                print esc_html( count( $users ) . " " . esc_html__( $status, 'new-user-approve' ) . "&nbsp;&nbsp;&nbsp;" );
             endforeach; ?>
             </p>
         </div>
@@ -304,9 +304,9 @@ class pw_new_user_approve {
      * @return string
      */
     public function default_notification_message() {
-        $message  = __( 'USERNAME (USEREMAIL) has requested a username at SITENAME', 'new-user-approve' ) . "\n\n";
+        $message  = esc_html__( 'USERNAME (USEREMAIL) has requested a username at SITENAME', 'new-user-approve' ) . "\n\n";
         $message .= "SITEURL\n\n";
-        $message .= __( 'To approve or deny this user access to SITENAME go to', 'new-user-approve' ) . "\n\n";
+        $message .= esc_html__( 'To approve or deny this user access to SITENAME go to', 'new-user-approve' ) . "\n\n";
         $message .= "ADMINURL\n\n";
 
         return $message;
@@ -344,7 +344,7 @@ class pw_new_user_approve {
 
         $message = apply_filters( 'new_user_approve_request_approval_message', $message, $user_login, $user_email );
 
-        $subject = sprintf( __( '[%s] User Approval', 'new-user-approve' ), $blogname );
+        $subject = sprintf( esc_html__( '[%s] User Approval', 'new-user-approve' ), $blogname );
         $subject = apply_filters( 'new_user_approve_request_approval_subject', $subject );
 
         $to = apply_filters( 'new_user_approve_email_admins', array( get_option( 'admin_email' ) ) );
@@ -374,7 +374,7 @@ class pw_new_user_approve {
         $user_pass = wp_generate_password( 12, false );
         $user_id = wp_create_user( $user_login, $user_pass, $user_email );
         if ( ! $user_id ) {
-            $errors->add( 'registerfail', sprintf( __( '<strong>ERROR</strong>: Couldn&#8217;t register you... please contact the <a href="mailto:%s">webmaster</a> !' ), get_option( 'admin_email' ) ) );
+            $errors->add( 'registerfail', sprintf( esc_html__( '<strong>ERROR</strong>: Couldn&#8217;t register you... please contact the <a href="mailto:%s">webmaster</a> !' ), get_option( 'admin_email' ) ) );
             return $errors;
         }
     }
@@ -444,16 +444,16 @@ class pw_new_user_approve {
         $user_email = stripslashes( $user->data->user_email );
 
         // format the message
-        $message  = sprintf( __( 'You have been approved to access %s', 'new-user-approve' ), get_option( 'blogname' ) ) . "\r\n";
-        $message .= sprintf( __( 'Username: %s', 'new-user-approve' ), $user_login ) . "\r\n";
+        $message  = sprintf( esc_html__( 'You have been approved to access %s', 'new-user-approve' ), get_option( 'blogname' ) ) . "\r\n";
+        $message .= sprintf( esc_html__( 'Username: %s', 'new-user-approve' ), $user_login ) . "\r\n";
         if ( ! $bypass_password_reset ) {
-            $message .= sprintf( __( 'Password: %s', 'new-user-approve' ), $new_pass ) . "\r\n";
+            $message .= sprintf( esc_html__( 'Password: %s', 'new-user-approve' ), $new_pass ) . "\r\n";
         }
         $message .= wp_login_url() . "\r\n";
 
         $message = apply_filters( 'new_user_approve_approve_user_message', $message, $user );
 
-        $subject = sprintf( __( '[%s] Registration Approved', 'new-user-approve' ), get_option( 'blogname' ) );
+        $subject = sprintf( esc_html__( '[%s] Registration Approved', 'new-user-approve' ), get_option( 'blogname' ) );
         $subject = apply_filters( 'new_user_approve_approve_user_subject', $subject );
 
         // send the mail
@@ -477,10 +477,10 @@ class pw_new_user_approve {
         $user_email = stripslashes( $user->user_email );
 
         // format the message
-        $message = sprintf( __( 'You have been denied access to %s', 'new-user-approve' ), get_option( 'blogname' ) );
+        $message = sprintf( esc_html__( 'You have been denied access to %s', 'new-user-approve' ), get_option( 'blogname' ) );
         $message = apply_filters( 'new_user_approve_deny_user_message', $message, $user );
 
-        $subject = sprintf( __( '[%s] Registration Denied', 'new-user-approve' ), get_option( 'blogname' ) );
+        $subject = sprintf( esc_html__( '[%s] Registration Denied', 'new-user-approve' ), get_option( 'blogname' ) );
         $subject = apply_filters( 'new_user_approve_deny_user_subject', $subject );
 
         // send the mail
@@ -525,17 +525,17 @@ class pw_new_user_approve {
         if ( $errors->get_error_code() )
             return $errors;
 
-        $message  = sprintf( __( 'An email has been sent to the site administrator. The administrator will review the information that has been submitted and either approve or deny your request.', 'new-user-approve' ) );
+        $message  = sprintf( esc_html__( 'An email has been sent to the site administrator. The administrator will review the information that has been submitted and either approve or deny your request.', 'new-user-approve' ) );
         $message .= ' ';
-        $message .= sprintf( __( 'You will receive an email with instructions on what you will need to do next. Thanks for your patience.', 'new-user-approve' ) );
+        $message .= sprintf( esc_html__( 'You will receive an email with instructions on what you will need to do next. Thanks for your patience.', 'new-user-approve' ) );
         $message = apply_filters( 'new_user_approve_pending_message', $message );
 
         $errors->add( 'registration_required', $message, 'message' );
 
-        $success_message = __( 'Registration successful.', 'new-user-approve' );
+        $success_message = esc_html__( 'Registration successful.', 'new-user-approve' );
         $success_message = apply_filters( 'new_user_approve_registration_message', $success_message );
 
-        login_header( __( 'Pending Approval', 'new-user-approve' ), '<p class="message register">' . $success_message . '</p>', $errors );
+        login_header( esc_html__( 'Pending Approval', 'new-user-approve' ), '<p class="message register">' . $success_message . '</p>', $errors );
         login_footer();
 
         // an exit is necessary here so the normal process for user registration doesn't happen
@@ -572,7 +572,7 @@ class pw_new_user_approve {
      */
     public function welcome_user($message) {
         if ( ! isset( $_GET['action'] ) ) {
-            $welcome = sprintf( __( 'Welcome to %s. This site is accessible to approved users only. To be approved, you must first register.', 'new-user-approve' ), get_option( 'blogname' ) );
+            $welcome = sprintf( esc_html__( 'Welcome to %s. This site is accessible to approved users only. To be approved, you must first register.', 'new-user-approve' ), get_option( 'blogname' ) );
             $welcome = apply_filters( 'new_user_approve_welcome_message', $welcome );
 
             if ( ! empty( $welcome ) ) {
@@ -581,7 +581,7 @@ class pw_new_user_approve {
         }
 
         if ( isset( $_GET['action'] ) && $_GET['action'] == 'register' && ! $_POST ) {
-            $instructions = sprintf( __( 'After you register, your request will be sent to the site administrator for approval. You will then receive an email with further instructions.', 'new-user-approve' ) );
+            $instructions = sprintf( esc_html__( 'After you register, your request will be sent to the site administrator for approval. You will then receive an email with further instructions.', 'new-user-approve' ) );
             $instructions = apply_filters( 'new_user_approve_register_instructions', $instructions );
 
             if ( ! empty( $instructions ) ) {

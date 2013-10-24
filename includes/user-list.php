@@ -89,8 +89,8 @@ class pw_new_user_approve_user_list {
         $approve_link = wp_nonce_url( add_query_arg( array( 'action' => 'approve', 'user' => $user->ID ) ), 'new-user-approve' );
         $deny_link = wp_nonce_url( add_query_arg( array( 'action' => 'deny', 'user' => $user->ID ) ), 'new-user-approve' );
 
-        $approve_action = '<a href="' . esc_url( $approve_link ) . '">' . __( 'Approve', 'new-user-approve' ) . '</a>';
-        $deny_action = '<a href="' . esc_url( $deny_link ) . '">' . __( 'Deny', 'new-user-approve' ) . '</a>';
+        $approve_action = '<a href="' . esc_url( $approve_link ) . '">' . esc_html__( 'Approve', 'new-user-approve' ) . '</a>';
+        $deny_action = '<a href="' . esc_url( $deny_link ) . '">' . esc_html__( 'Deny', 'new-user-approve' ) . '</a>';
 
         if ( $user_status == 'pending' ) {
             $actions[] = $approve_action;
@@ -112,7 +112,7 @@ class pw_new_user_approve_user_list {
      * @return array
      */
     public function add_column( $columns ) {
-        $the_columns['pw_user_status'] = __( 'Status', 'new-user-approve' );
+        $the_columns['pw_user_status'] = esc_html__( 'Status', 'new-user-approve' );
 
         $newcol = array_slice( $columns, 0, -1 );
         $newcol = array_merge( $newcol, $the_columns );
@@ -148,18 +148,18 @@ class pw_new_user_approve_user_list {
      * @uses restrict_manage_users
      */
     public function status_filter() {
-        $filter_button = submit_button( __( 'Filter', 'new-user-approve' ), 'button', 'pw-status-query-submit', false, array( 'id' => 'pw-status-query-submit' ) );
+        $filter_button = submit_button( esc_html__( 'Filter', 'new-user-approve' ), 'button', 'pw-status-query-submit', false, array( 'id' => 'pw-status-query-submit' ) );
         $filtered_status = (isset( $_GET['new_user_approve_filter'] ) ) ? esc_attr( $_GET['new_user_approve_filter'] ) : '';
 
         ?>
-        <label class="screen-reader-text" for="new_user_approve_filter"><?php _e( 'View all users', 'new-user-approve' ); ?></label>
+        <label class="screen-reader-text" for="new_user_approve_filter"><?php esc_html_e( 'View all users', 'new-user-approve' ); ?></label>
         <select id="new_user_approve_filter" name="new_user_approve_filter" style="float: none; margin: 0 0 0 15px;">
-            <option value=""><?php _e( 'View all users', 'new-user-approve' ); ?></option>
+            <option value=""><?php esc_html_e( 'View all users', 'new-user-approve' ); ?></option>
         <?php foreach ( pw_new_user_approve()->get_valid_statuses() as $status ) : ?>
             <option value="<?php echo esc_attr( $status ); ?>"<?php selected( $status, $filtered_status ); ?>><?php echo esc_html( $status ); ?></option>
         <?php endforeach; ?>
         </select>
-        <?php echo apply_filters( 'new_user_approve_filter_button', $filter_button ); ?>
+        <?php echo esc_html( apply_filters( 'new_user_approve_filter_button', $filter_button ) ); ?>
         <style>
             #pw-status-query-submit {
                 float: right;
@@ -211,11 +211,11 @@ class pw_new_user_approve_user_list {
         if ( $screen->id == 'users' ) : ?>
             <script type="text/javascript">
                 jQuery(document).ready(function($) {
-                    $('<option>').val('approve').text('<?php _e( 'Approve', 'new-user-approve' )?>').appendTo("select[name='action']")
-                    $('<option>').val('approve').text('<?php _e( 'Approve', 'new-user-approve' )?>').appendTo("select[name='action2']");
+                    $('<option>').val('approve').text('<?php esc_html_e( 'Approve', 'new-user-approve' )?>').appendTo("select[name='action']")
+                    $('<option>').val('approve').text('<?php esc_html_e( 'Approve', 'new-user-approve' )?>').appendTo("select[name='action2']");
 
-                    $('<option>').val('deny').text('<?php _e( 'Deny', 'new-user-approve' )?>').appendTo("select[name='action']")
-                    $('<option>').val('deny').text('<?php _e( 'Deny', 'new-user-approve' )?>').appendTo("select[name='action2']");
+                    $('<option>').val('deny').text('<?php esc_html_e( 'Deny', 'new-user-approve' )?>').appendTo("select[name='action']")
+                    $('<option>').val('deny').text('<?php esc_html_e( 'Deny', 'new-user-approve' )?>').appendTo("select[name='action2']");
                 });
             </script>
         <?php endif;
@@ -329,19 +329,19 @@ class pw_new_user_approve_user_list {
         ?>
         <table class="form-table">
             <tr>
-                <th><label for="new_user_approve_status"><?php _e( 'Access Status', 'new-user-approve' ); ?></label></th>
+                <th><label for="new_user_approve_status"><?php esc_html_e( 'Access Status', 'new-user-approve' ); ?></label></th>
                 <td>
                     <select id="new_user_approve_status" name="new_user_approve_status">
                     <?php if ( $user_status == 'pending' ) : ?>
-                        <option value=""><?php _e( '-- Status --', 'new-user-approve' ); ?></option>
+                        <option value=""><?php esc_html_e( '-- Status --', 'new-user-approve' ); ?></option>
                     <?php endif; ?>
                     <?php foreach ( array( 'approved', 'denied' ) as $status ) : ?>
                         <option value="<?php echo esc_attr( $status ); ?>"<?php selected( $status, $user_status ); ?>><?php echo esc_html( $status ); ?></option>
                     <?php endforeach; ?>
                     </select>
-                    <span class="description"><?php _e( 'If user has access to sign in or not.', 'new-user-approve' ); ?></span>
+                    <span class="description"><?php esc_html_e( 'If user has access to sign in or not.', 'new-user-approve' ); ?></span>
                 <?php if ( $user_status == 'pending' ) : ?>
-                    <br /><span class="description"><?php _e( 'Current user status is <strong>pending</strong>.', 'new-user-approve' ); ?></span>
+                    <br /><span class="description"><?php esc_html_e( 'Current user status is <strong>pending</strong>.', 'new-user-approve' ); ?></span>
                 <?php endif; ?>
                 </td>
             </tr>
