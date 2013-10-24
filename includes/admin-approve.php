@@ -148,7 +148,7 @@ class pw_new_user_approve_admin_approve {
                     }
 
                     ?><tr <?php echo esc_attr( $class ); ?>>
-                    <td><?php echo esc_html( $avatar . ' ' . $edit ); ?></td>
+                    <td><?php echo wp_kses_post( $avatar . ' ' . $edit ); ?></td>
                     <td><?php echo esc_html( get_user_meta( $user->ID, 'first_name', true ) . ' ' . get_user_meta( $user->ID, 'last_name', true ) ); ?></td>
                     <td><a href="mailto:<?php echo sanitize_email( $user->user_email ); ?>" title="<?php esc_attr_e('email:', 'new-user-approve' ) ?> <?php echo sanitize_email( $user->user_email ); ?>"><?php echo sanitize_email( $user->user_email ); ?></a></td>
                     <?php if ( $approve && $user->ID != get_current_user_id() ) { ?>
@@ -213,7 +213,7 @@ class pw_new_user_approve_admin_approve {
             // Check that the user hasn't already clicked to ignore the message
             if ( ! get_user_meta( $user_id, 'pw_new_user_approve_ignore_notice' ) ) {
                 echo '<div class="updated"><p>';
-                printf( esc_html__( 'You can now update user status on the <a href="%1$s">users admin page</a>. | <a href="%2$s">Hide Notice</a>', 'new-user-approve' ), admin_url( 'users.php' ), add_query_arg( array( 'new-user-approve-ignore-notice' => 1 ) ) );
+                echo wp_kses_post( sprintf( __( 'You can now update user status on the <a href="%1$s">users admin page</a>. | <a href="%2$s">Hide Notice</a>', 'new-user-approve' ), admin_url( 'users.php' ), add_query_arg( array( 'new-user-approve-ignore-notice' => 1 ) ) ) );
                 echo "</p></div>";
             }
         }
