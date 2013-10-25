@@ -415,18 +415,11 @@ class pw_new_user_approve {
         $bypass_password_reset = apply_filters( 'new_user_approve_bypass_password_reset', $bypass_password_reset );
 
         if ( ! $bypass_password_reset ) {
-            global $wpdb;
 
             // reset password to know what to send the user
             $new_pass = wp_generate_password( 12, false );
-            $data = array(
-                'user_pass' => md5( $new_pass ),
-                'user_activation_key' => '',
-            );
-            $where = array(
-                'ID' => $user->ID,
-            );
-            $wpdb->update( $wpdb->users, $data, $where, array( '%s', '%s' ), array( '%d' ) );
+
+            wp_set_password( $new_pass, $user->ID );
 
             // Set up the Password change nag.
             update_user_option( $user->ID, 'default_password_nag', true, true );
